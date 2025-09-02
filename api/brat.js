@@ -1,21 +1,15 @@
-import { createCanvas } from "canvas";
-
 export default async function handler(req, res) {
   const { text } = req.query;
 
-  const canvas = createCanvas(512, 512);
-  const ctx = canvas.getContext("2d");
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+      <rect width="100%" height="100%" fill="#ff69b4"/>
+      <text x="50%" y="50%" font-size="40" text-anchor="middle" fill="white" dy=".3em" font-family="Arial, sans-serif">
+        ${text || "Brat 💗"}
+      </text>
+    </svg>
+  `;
 
-  // Background
-  ctx.fillStyle = "#ff69b4"; // warna pink brat
-  ctx.fillRect(0, 0, 512, 512);
-
-  // Teks
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 30px Arial";
-  ctx.fillText(text || "Brat 💗", 50, 100);
-
-  // Return image
-  res.setHeader("Content-Type", "image/png");
-  res.send(canvas.toBuffer("image/png"));
+  res.setHeader("Content-Type", "image/svg+xml");
+  res.send(svg);
 }
